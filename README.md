@@ -2,8 +2,8 @@
 
 ## A Weekly Tweet to share your last week's bookmarks automatically!
 
-I have integrated new feature of sharing bookmarks in daily.dev with Twitter.
-Here one has to just copy and paste the link of his sharable bookmarks.
+I have integrated new feature of sharing bookmarks in daily.dev with Twitter. <br>
+Here one has to just copy and paste the link of his sharable bookmarks. <br>
 And then just pick up a time of the week where a tweet will be sent with those bookmark links!
 
 ### Login With Twitter
