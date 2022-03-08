@@ -544,6 +544,6 @@ getCurrentUser = async () => {
 };
 
 app.listen(process.env.PORT || 3000, async function () {
-  console.log("Devto RSS to Tweet bot is running");
+  console.log("Daily.Dev RSS to Tweet bot is running");
   twyttler = await getCurrentUser();
 });
