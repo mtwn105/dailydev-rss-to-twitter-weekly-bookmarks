@@ -1,0 +1,7 @@
+<nav class="navbar navbar-light bg-primary">
+  <a class="navbar-brand mr-auto">DailyDev RSS to Tweet</a>
+  <button (click)="authService.signOut()" *ngIf="authService.isLoggedIn" type="button"
+    class="btn btn-danger">Logout</button>
+</nav>
+
+<router-outlet></router-outlet>
