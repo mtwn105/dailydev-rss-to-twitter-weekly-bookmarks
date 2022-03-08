@@ -1,14 +1,24 @@
 <div class="jumbotron jumbotron-fluid">
   <div class="container">
     <ng-container *ngIf="!authService.isLoggedIn">
-      <h1 class="display-4">Hello!</h1>
-      <p class="lead">I will post tweet of your bookmarked pages from Daily.Dev every week! Like this 👇</p>
+      <div class="row">
 
-      <img src="../../../assets/tweet.png" alt="tweet">
+        <div class="col-md">
+          <h1 class="display-4">Hello!</h1>
+          <p class="lead">I will post tweet of your bookmarked pages from Daily.Dev every week! Like this 👉</p>
+          <p>Sign in with twitter to get started</p>
+          <a (click)="signInWithTwitter()" class="btn btn-primary btn-lg" role="button">Sign In with Twitter</a>
+
+        </div>
+        <div class="col-md">
+          <img src="../../../assets/tweet.png" alt="tweet">
+        </div>
+
+      </div>
+
 
       <hr class="my-4">
-      <p>Sign in with twitter to get started</p>
-      <a (click)="signInWithTwitter()" class="btn btn-primary btn-lg" role="button">Sign In with Twitter</a>
+
     </ng-container>
     <ng-container *ngIf="authService.isLoggedIn && authService.user">
 
