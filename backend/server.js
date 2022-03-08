@@ -55,7 +55,7 @@ const oauthConsumer = new oauth.OAuth(
   process.env.APP_KEY,
   process.env.APP_SECRET,
   "1.0A",
-  "http://127.0.0.1:3003/twitter/callback",
+  process.env.APP_URL + "/twitter/callback",
   "HMAC-SHA1"
 );
 
