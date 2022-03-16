@@ -20,4 +20,8 @@ export class BookmarksService {
     return this.http.put(environment.baseUrl + "api/user/rss", { url, day, time });
   }
 
+  postTweet() {
+    return this.http.post(environment.baseUrl + "api/tweet", {});
+  }
+
 }

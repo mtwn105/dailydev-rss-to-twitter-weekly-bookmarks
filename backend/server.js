@@ -442,53 +442,80 @@ app.put("/api/user/rss", jwtHandler, async (req, res) => {
 });
 
 // Post Tweet
-app.get("/api/tweet", async (req, res) => {
-  // Get Oauth secret and user
-  const { twitter_user_id, twitter_access_token, twitter_access_secret } =
-    req.cookies;
+app.post("/api/tweet", jwtHandler, async (req, res) => {
+  const token = req.headers["authorization"].substring(7);
 
-  // Get User
-  const user = await User.findOne({ user_id: twitter_user_id });
+  try {
+    const user = await User.findOne({ token: token });
 
-  // Validate token and secret with in db
-  if (user.twitter_access_token !== twitter_access_token) {
-    return res.status(400).json({
+    if (!user) {
+      return res.status(401).json({
+        status: "error",
+        message: "Unauthorized",
+      });
+    }
+
+    // Get feed using RSS Link
+    let feed = await parser.parseURL(user.rss_link);
+    console.log("Total Bookmark Items: ", feed.items.length);
+
+    const bookmarks = [];
+
+    for (let item of feed.items) {
+      let bookmark = {
+        title: item.title,
+        link: item.link,
+        date: item.isoDate,
+      };
+
+      bookmarks.push(bookmark);
+    }
+
+    // Filter bookmarks from only past 7 days
+    let filteredBookmarks = bookmarks.filter((bookmark) => {
+      const date = new Date(bookmark.date);
+      const diff = Math.abs(new Date() - date);
+      const diffDays = Math.ceil(diff / (1000 * 60 * 60 * 24));
+      return diffDays <= 7;
+    });
+
+    console.log("Filtered Bookmark Items: ", filteredBookmarks.length);
+
+    if (filteredBookmarks.length > 0) {
+      // Latest 5
+      if (filteredBookmarks.length > 5) {
+        filteredBookmarks = filteredBookmarks.slice(0, 5);
+      }
+
+      console.log("Posting tweet for user " + user.username);
+      // Post Tweet
+      const tweet = await postTweet(user, filteredBookmarks);
+      console.log(
+        "Posted tweet for user " + user.username,
+        JSON.stringify(tweet)
+      );
+
+      return res.status(200).json({
+        status: "success",
+        message: "Tweet posted successfully",
+        tweetLink:
+          "https://twitter.com/" + user.user_id + "/status/" + tweet.data.id,
+      });
+    } else {
+      console.log("No bookmarks to post for user " + user.username);
+      return res.status(200).json({
+        status: "success",
+        message: "No bookmarks to post",
+      });
+    }
+  } catch (err) {
+    console.error("Error while sending tweets for user");
+    console.error(err);
+    return res.status(500).json({
       status: "error",
-      message: "Invalid access token",
+      message: "Error while sending tweets",
     });
   }
-
-  if (user.twitter_access_secret !== twitter_access_secret) {
-    return res.status(400).json({
-      status: "error",
-      message: "Invalid access secret",
-    });
-  }
-
-  // Get feed using RSS Link
-
-  let feed = await parser.parseURL(url);
-  console.log("Bookmark Items: ", feed.items.length);
-
-  const bookmarks = [];
-
-  for (let item of feed.items) {
-    let bookmark = {
-      title: item.title,
-      link: item.link,
-      date: item.isoDate,
-    };
-
-    bookmarks.push(bookmark);
-  }
-
-  // Post Tweet
-  const tweet = await postTweet(user, bookmarks);
-
-  res.status(200).json({
-    status: "success",
-    message: "Tweet posted",
-  });
 });
 
 postTweet = async (user, bookmarks) => {
@@ -499,9 +526,14 @@ postTweet = async (user, bookmarks) => {
     accessSecret: user.twitter_access_secret,
   });
 
-  await client.readWrite.v2.tweet(`
+  return await client.readWrite.v2.tweet(`
 
-  My latest bookmark: ${bookmarks[0].title}
+  Hey Peeps!
+
+  Here are my favourite articles from last week:
+  ${bookmarks.map((bookmark) => `👉 ${bookmark.link}`).join("\n")}
+
+  Show your love 🥰 if you like it!
 
   `);
 };

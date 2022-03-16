@@ -17,11 +17,14 @@ export class HomeComponent implements OnInit {
   bookmarksError = false;
   updateRssError = false;
   updateRssSuccess = false;
+  postTweetMessage = "";
   day = "Monday";
   time = {
     hour: 12,
     minute: 0,
   };
+  tweetLink: any;
+  postTweetLoading = false;
 
   constructor(
     private route: ActivatedRoute,
@@ -78,16 +81,7 @@ export class HomeComponent implements OnInit {
   }
 
   signInWithTwitter() {
-
     window.location.href = environment.baseUrl + "twitter/authenticate"
-
-    // this.authService.login().subscribe((data: any) => {
-
-    //   console.log(data)
-
-    //   window.location.href = data.redirect;
-
-    // });
   }
 
   getBookmarks() {
@@ -133,6 +127,29 @@ export class HomeComponent implements OnInit {
     });
 
 
+  }
+
+  postTweet() {
+
+
+    this.postTweetLoading = true;
+
+    this.bookmarksService.postTweet().subscribe((data: any) => {
+      this.postTweetLoading = false;
+
+      if (data.tweetLink) {
+        this.postTweetMessage = "Tweet posted successfully. Click here to view it: ";
+        this.tweetLink = data.tweetLink;
+      } else {
+        this.postTweetMessage = "No latest bookmarks to be posted";
+      }
+
+    }, error => {
+
+      this.postTweetMessage = error.error.message;
+      this.postTweetLoading = false;
+
+    });
   }
 
 }

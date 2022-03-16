@@ -113,9 +113,9 @@ postBookmarkTweet = async (user, bookmarks) => {
   Hey Peeps!
 
   Here are my favourite articles from last week:
-    ${bookmarks.map((bookmark) => `👉 ${bookmark.link}`).join("\n")}
+  ${bookmarks.map((bookmark) => `👉 ${bookmark.link}`).join("\n")}
 
-    Show your love 🥰 if you like it!
+  Show your love 🥰 if you like it!
 
   `);
 };
