@@ -6,6 +6,10 @@ I have integrated new feature of sharing bookmarks in daily.dev with Twitter. <b
 Here one has to just copy and paste the link of his sharable bookmarks. <br>
 And then just pick up a time of the week where a tweet will be sent with those bookmark links!
 
+## Demo
+
+Youtube - [https://www.youtube.com/watch?v=TywXBNVEKLg](https://www.youtube.com/watch?v=TywXBNVEKLg)
+
 ### Login With Twitter
 
 ![image](https://user-images.githubusercontent.com/12975481/157287251-5fb96a77-04c0-41b8-842d-5718130c9a64.png)
